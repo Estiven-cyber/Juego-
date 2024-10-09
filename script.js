@@ -2,8 +2,9 @@ const dino = document.getElementById("dino");
 const cactus = document.getElementById("cactus");
 let isJumping = false;
 
-document.addEventListener("keydown", function(event) {
-    if (event.code === "Space" && !isJumping) {
+// Detectar eventos de toque en pantallas táctiles
+document.addEventListener("touchstart", function() {
+    if (!isJumping) {
         jump();
     }
 });
@@ -18,7 +19,6 @@ function jump() {
 }
 
 let isAlive = setInterval(function() {
-    // Posiciones actuales del dino y cactus
     let dinoTop = parseInt(window.getComputedStyle(dino).getPropertyValue("bottom"));
     let cactusLeft = parseInt(window.getComputedStyle(cactus).getPropertyValue("right"));
 
