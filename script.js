@@ -6,10 +6,11 @@ const gameHeight = gameArea.offsetHeight;
 let playerX = (gameWidth / 2) - 25;
 let lasers = [];
 let invaders = [];
-let enemyLasers = [];  // Nuevo array para disparos enemigos
+let enemyLasers = [];
 let invaderSpeed = 1;
 let invaderDirection = 1;
 let invaderTimer = 0;
+let score = 0;  // Variable de puntuación
 
 document.addEventListener('keydown', movePlayer);
 document.addEventListener('keydown', shootLaser);
@@ -72,12 +73,15 @@ function updateLasers() {
                 invaders.splice(invaderIndex, 1);
                 laser.remove();
                 lasers.splice(index, 1);
+
+                // Aumentar la puntuación y actualizar la pantalla
+                score += 10;
+                document.getElementById('scoreDisplay').innerText = `Score: ${score}`;
             }
         });
     });
 }
 
-// Nuevo: disparos enemigos
 function shootEnemyLaser() {
     if (invaders.length > 0) {
         const randomInvaderIndex = Math.floor(Math.random() * invaders.length);
@@ -93,7 +97,6 @@ function shootEnemyLaser() {
     }
 }
 
-// Nuevo: actualizar los disparos enemigos
 function updateEnemyLasers() {
     enemyLasers.forEach((laser, index) => {
         let laserTop = parseInt(laser.style.top);
@@ -131,12 +134,12 @@ function updateInvaders() {
     });
 }
 
-let enemyShootInterval = 0;  // Contador para la frecuencia de disparo
+let enemyShootInterval = 0;
 
 function gameLoop() {
     updateLasers();
     updateInvaders();
-    updateEnemyLasers();  // Actualizar disparos enemigos
+    updateEnemyLasers();
 
     invaderTimer++;
     if (invaderTimer > 100) {
@@ -145,7 +148,7 @@ function gameLoop() {
     }
 
     enemyShootInterval++;
-    if (enemyShootInterval > 50) {  // Frecuencia de disparos enemigos
+    if (enemyShootInterval > 50) {
         shootEnemyLaser();
         enemyShootInterval = 0;
     }
