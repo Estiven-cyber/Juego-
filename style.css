@@ -8,66 +8,39 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
     height: 100vh;
-    background-color: #f7f7f7;
-    font-family: Arial, sans-serif;
+    background-color: black;
 }
 
-.game-container {
-    width: 100%;
-    height: 150px;
-    overflow: hidden;
+#gameArea {
     position: relative;
-    border: 2px solid #333;
-    background-color: #fff;
+    width: 600px;
+    height: 600px;
+    background-color: #222;
+    border: 2px solid white;
+    overflow: hidden;
 }
 
-#dino {
+#player {
+    position: absolute;
     width: 50px;
     height: 50px;
-    background-color: #333;
-    position: absolute;
-    bottom: 0;
-    left: 50px;
+    background-color: white;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
-#cactus {
-    width: 25px;
-    height: 50px;
+.laser {
+    position: absolute;
+    width: 5px;
+    height: 20px;
+    background-color: red;
+}
+
+.invader {
+    position: absolute;
+    width: 40px;
+    height: 40px;
     background-color: green;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    animation: moveCactus 1.5s infinite linear;
-}
-
-@keyframes moveCactus {
-    0% {
-        right: -50px;
-    }
-    100% {
-        right: 100%;
-    }
-}
-
-.jumping {
-    animation: jump 0.5s ease-out;
-}
-
-@keyframes jump {
-    0% {
-        bottom: 0;
-    }
-    50% {
-        bottom: 100px;
-    }
-    100% {
-        bottom: 0;
-    }
-}
-
-p {
-    font-size: 18px;
-    margin-top: 20px;
 }
