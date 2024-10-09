@@ -8,6 +8,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     height: 100vh;
     background-color: #f7f7f7;
     font-family: Arial, sans-serif;
@@ -64,4 +65,9 @@ body {
     100% {
         bottom: 0;
     }
+}
+
+p {
+    font-size: 18px;
+    margin-top: 20px;
 }
