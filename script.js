@@ -6,6 +6,7 @@ const gameHeight = gameArea.offsetHeight;
 let playerX = (gameWidth / 2) - 25;
 let lasers = [];
 let invaders = [];
+let enemyLasers = [];  // Nuevo array para disparos enemigos
 let invaderSpeed = 1;
 let invaderDirection = 1;
 let invaderTimer = 0;
@@ -51,10 +52,69 @@ function updateLasers() {
         let laserBottom = parseInt(laser.style.bottom);
         laser.style.bottom = `${laserBottom + 10}px`;
 
-        // Remove lasers that leave the game area
         if (laserBottom > gameHeight) {
             laser.remove();
             lasers.splice(index, 1);
+        }
+
+        // Colisión con los invasores
+        invaders.forEach((invader, invaderIndex) => {
+            let laserRect = laser.getBoundingClientRect();
+            let invaderRect = invader.getBoundingClientRect();
+
+            if (
+                laserRect.left < invaderRect.right &&
+                laserRect.right > invaderRect.left &&
+                laserRect.top < invaderRect.bottom &&
+                laserRect.bottom > invaderRect.top
+            ) {
+                invader.remove();
+                invaders.splice(invaderIndex, 1);
+                laser.remove();
+                lasers.splice(index, 1);
+            }
+        });
+    });
+}
+
+// Nuevo: disparos enemigos
+function shootEnemyLaser() {
+    if (invaders.length > 0) {
+        const randomInvaderIndex = Math.floor(Math.random() * invaders.length);
+        const invader = invaders[randomInvaderIndex];
+
+        const laser = document.createElement('div');
+        laser.classList.add('laser');
+        laser.style.backgroundColor = 'yellow';
+        laser.style.left = `${parseInt(invader.style.left) + 20}px`;
+        laser.style.top = `${parseInt(invader.style.top) + 40}px`;
+        gameArea.appendChild(laser);
+        enemyLasers.push(laser);
+    }
+}
+
+// Nuevo: actualizar los disparos enemigos
+function updateEnemyLasers() {
+    enemyLasers.forEach((laser, index) => {
+        let laserTop = parseInt(laser.style.top);
+        laser.style.top = `${laserTop + 5}px`;
+
+        if (laserTop > gameHeight) {
+            laser.remove();
+            enemyLasers.splice(index, 1);
+        }
+
+        let laserRect = laser.getBoundingClientRect();
+        let playerRect = player.getBoundingClientRect();
+
+        if (
+            laserRect.left < playerRect.right &&
+            laserRect.right > playerRect.left &&
+            laserRect.top < playerRect.bottom &&
+            laserRect.bottom > playerRect.top
+        ) {
+            alert("¡Has sido impactado! Fin del juego.");
+            document.location.reload();
         }
     });
 }
@@ -64,39 +124,30 @@ function updateInvaders() {
         let invaderX = parseInt(invader.style.left);
         invader.style.left = `${invaderX + invaderSpeed * invaderDirection}px`;
 
-        // Change direction if invaders hit the edge
         if (invaderX > gameWidth - 50 || invaderX < 0) {
             invaderDirection *= -1;
             invader.style.top = `${parseInt(invader.style.top) + 20}px`;
         }
-
-        // Check for collision with lasers
-        lasers.forEach((laser, laserIndex) => {
-            let laserRect = laser.getBoundingClientRect();
-            let invaderRect = invader.getBoundingClientRect();
-            if (
-                laserRect.left < invaderRect.right &&
-                laserRect.right > invaderRect.left &&
-                laserRect.top < invaderRect.bottom &&
-                laserRect.bottom > invaderRect.top
-            ) {
-                invader.remove();
-                invaders.splice(index, 1);
-                laser.remove();
-                lasers.splice(laserIndex, 1);
-            }
-        });
     });
 }
+
+let enemyShootInterval = 0;  // Contador para la frecuencia de disparo
 
 function gameLoop() {
     updateLasers();
     updateInvaders();
+    updateEnemyLasers();  // Actualizar disparos enemigos
 
     invaderTimer++;
     if (invaderTimer > 100) {
         createInvaders();
         invaderTimer = 0;
+    }
+
+    enemyShootInterval++;
+    if (enemyShootInterval > 50) {  // Frecuencia de disparos enemigos
+        shootEnemyLaser();
+        enemyShootInterval = 0;
     }
 
     requestAnimationFrame(gameLoop);
