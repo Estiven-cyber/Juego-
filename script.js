@@ -2,7 +2,7 @@ const dino = document.getElementById("dino");
 const cactus = document.getElementById("cactus");
 let isJumping = false;
 
-// Detectar eventos de toque en pantallas táctiles
+// Detectar toque en la pantalla (evento touchstart)
 document.addEventListener("touchstart", function() {
     if (!isJumping) {
         jump();
